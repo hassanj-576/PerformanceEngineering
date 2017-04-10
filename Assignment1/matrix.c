@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+#include<time.h>   
 
 int main(int argc, char **argv)
 {
@@ -7,6 +8,8 @@ int main(int argc, char **argv)
 		//throw error
 
 	}
+    struct timespec start, end;
+    
 	int N1= atoi(argv[2]);
 	int M1 =atoi(argv[3]);
 	int N2= atoi(argv[5]);
@@ -71,7 +74,7 @@ int main(int argc, char **argv)
 
 	/* print some text */
 	
-
+   clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     int * ans= malloc(sizeof(int)*N1*M2);
     for(i=0;i<N1;i++){
     	for (j=0;j<M2;j++){
@@ -85,8 +88,10 @@ int main(int argc, char **argv)
     	}
     	fprintf(f,"\n");
     }
-    
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     fclose(f);
+    float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+    printf("%f",delta_us);  
 
 	return 0;
 }
