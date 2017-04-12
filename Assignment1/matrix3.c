@@ -76,26 +76,35 @@ int main(int argc, char **argv)
 	/* print some text */
    int * matrix2Transpose = malloc(sizeof(int)*N2*M2);
    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+   int i2=0;
    for (int i = 0; i < M2; ++i)
     {
+    	
         for (int j = 0; j < N2; ++j)
         {
-            matrix2Transpose[i + j * N2] = matrix2[i * M2 + j];
+            matrix2Transpose[i + j * N2] = matrix2[i2+ j];
            
         }
+        i2=i2+M2;
     }
     int * ans= malloc(sizeof(int)*N1*M2);
+    int iM1=0;
+    int iM2=0;
     for(i=0;i<N1;i++){
+    	int j2=0;
     	for (j=0;j<M2;j++){
     		ans[i*M2+j]=0;
     		for(int k=0;k<M1;k++){
-    			ans[i*M2+j]+=matrix[i*M1+k]*matrix2Transpose[k + j * N2];
+    			ans[iM2+j]+=matrix[iM1+k]*matrix2Transpose[k + j2];
 
     		}
     		
-    		fprintf(f,"%d\t",ans[i*M2+j]);
+    		fprintf(f,"%d\t",ans[iM2+j]);
+    		j2=j2+M2;
     	}
     	fprintf(f,"\n");
+    	iM1+=M1;
+    	iM2+=M2;
     }
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     fclose(f);
