@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<time.h>   
+#include "omp.h"
 
 int main(int argc, char **argv)
 {
@@ -76,36 +77,40 @@ int main(int argc, char **argv)
 	/* print some text */
    int * matrix2Transpose = malloc(sizeof(int)*N2*M2);
    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-   int i2=0;
-   for (int i = 0; i < M2; ++i)
-    {
-    	
-        for (int j = 0; j < N2; ++j)
-        {
-            matrix2Transpose[i + j * N2] = matrix2[i2+ j];
-           
-        }
-        i2=i2+M2;
-    }
-    int * ans= malloc(sizeof(int)*N1*M2);
-    int iM1=0;
-    int iM2=0;
-    for(i=0;i<N1;i++){
-    	int j2=0;
-    	for (j=0;j<M2;j++){
-    		ans[i*M2+j]=0;
-    		for(int k=0;k<M1;k++){
-    			ans[iM2+j]+=matrix[iM1+k]*matrix2Transpose[k + j2];
+   #pragma omp parallel{
+	   int i2=0;
+	   #pragma omp for private(i2) shared(matrix2Transpose,matrix2)
+	   for (int i = 0; i < M2; ++i)
+	    {
+	    	
+	        for (int j = 0; j < N2; ++j)
+	        {
+	            matrix2Transpose[i + j * N2] = matrix2[i2+ j];
+	           
+	        }
+	        i2=i2+M2;
+	    }
+	    int * ans= malloc(sizeof(int)*N1*M2);
+	    int iM1=0;
+	    int iM2=0;
+	     #pragma omp for private(iM1,iM2) shared(ans,matrix,matrix2Transpose)
+	    for(i=0;i<N1;i++){
+	    	int j2=0;
+	    	for (j=0;j<M2;j++){
+	    		ans[i*M2+j]=0;
+	    		for(int k=0;k<M1;k++){
+	    			ans[iM2+j]+=matrix[iM1+k]*matrix2Transpose[k + j2];
 
-    		}
-    		
-    		fprintf(f,"%d\t",ans[iM2+j]);
-    		j2=j2+M2;
-    	}
-    	fprintf(f,"\n");
-    	iM1+=M1;
-    	iM2+=M2;
-    }
+	    		}
+	    		
+	    		fprintf(f,"%d\t",ans[iM2+j]);
+	    		j2=j2+M2;
+	    	}
+	    	fprintf(f,"\n");
+	    	iM1+=M1;
+	    	iM2+=M2;
+	    }
+	}
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     fclose(f);
     float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;

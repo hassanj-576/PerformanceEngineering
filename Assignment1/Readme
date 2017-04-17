@@ -1,0 +1,14 @@
+Please use the provided make file to compile the code
+
+the code can be run using a command like following
+
+./optimatrix2 5000.txt 5000 5000 5000.txt 5000 5000
+The argument are as following
+1) Matrix1 Text file
+2) M dimension of matrix 1
+3) N dimension of matrix1
+4) Matrix2 text file
+5) dimension of matrix 1
+6) N dimension of matrix1
+
+The Input file should contain number separated with white space with each line representing a row
