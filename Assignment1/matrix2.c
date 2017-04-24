@@ -92,14 +92,22 @@ int main(int argc, char **argv)
 
     		}
     		
-    		fprintf(f,"%d\t",ans[i*M2+j]);
+    		//fprintf(f,"%d\t",ans[i*M2+j]);
     	}
-    	fprintf(f,"\n");
+    	//fprintf(f,"\n");
     }
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+    for(i=0;i<N1;i++){
+        for (j=0;j<M2;j++){
+    //  printf("Inner loop\n");
+        fprintf(f,"%d\t",ans[i*M2+j]);
+    }
+    fprintf(f,"\n");
+    //printf("PRInted a line \n");
+     }
     fclose(f);
     float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-    printf("%f",delta_us);  
+    printf("%f\n",delta_us);  
 
 	return 0;
 }

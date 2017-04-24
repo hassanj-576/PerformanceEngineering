@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     fclose(f);
     float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-    printf("%f",delta_us);  
+    printf("%f\n",delta_us);  
 
 	return 0;
 }

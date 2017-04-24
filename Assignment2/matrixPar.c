@@ -94,26 +94,26 @@ int main(int argc, char **argv)
 	  
 	#pragma omp parallel for private(i,k,j) 
 	for(i=0;i<N1;i++){
+		int iM2= i*M2;
+		int iM1=i*M1;
 		for (j=0;j<M2;j++){
-			ans[i*M2+j]=0;
+			int jN2= j*N2;
+			ans[iM2+j]=0;
 			for(int k=0;k<M1;k++){
-				ans[i*M2+j]+=matrix[i*M1+k]*matrix2Transpose[k + j * N2];
-
+				ans[iM2+j]+=matrix[iM1+k]*matrix2Transpose[k + jN2];
 			}
-			
-			//fprintf(f,"%d\t",ans[i*M2+j]);
 		}
-		//fprintf(f,"\n");
 	}
+
    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
    printf("About to write \n");
 	for(i=0;i<N1;i++){
 		for (j=0;j<M2;j++){
-	//	printf("Inner loop\n");
-		fprintf(f,"%d\t",ans[i*M2+j]);
-	}
-	fprintf(f,"\n");
-	//printf("PRInted a line \n");
+			//printf("Inner loop\n");
+			fprintf(f,"%d\t",ans[i*M2+j]);
+		}
+		fprintf(f,"\n");
+		//printf("PRInted a line \n");
 	 }
 	printf("END!!\n");
 	
