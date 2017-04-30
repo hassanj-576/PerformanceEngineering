@@ -45,19 +45,17 @@ int main(int argc, char **argv)
 		}
 		i++;
 	}
-	printf("value of i: %d\n",i);
 	if(i<nodeNumber){
 		printf("Error Number of points in file less then the number specified\n");
 		return 1;
 	}
-
+	fclose(fp);
 	for (int first=0;first<nodeNumber;first++){
 		for(int second=0;second<nodeNumber;second++){
 			double sq1 = pow((nodes[first].x-nodes[second].x),2);
 			double sq2 = pow((nodes[first].y-nodes[second].y),2);
 			nodes[first].neighbourDistance[second]=sqrt(sq1 + sq2);
 			nodes[first].neighbourID[second]=second;
-			printf("Distance Calculated: %f\n",nodes[first].neighbourDistance[second]);
 		}
 
 	}
@@ -82,13 +80,16 @@ int main(int argc, char **argv)
 	}
 
 
+			
 			//printf("Current Node : 1\t Id: %f \t Distance : %f\n",nodes[1].neighbourID[0],nodes[1].neighbourDistance[0]);
+	FILE *f = fopen("output.txt", "w");
 
 	for (int y=0;y<nodeNumber;y++){
 		for (int x=0;x<nodeNumber;x++){
-			printf("Current Node : \t Id: %f \t Distance : %f\n",nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
+			fprintf(f,"Current Node : %d\t Id: %d \t Distance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
 		}
 	}
+	fclose(f);
 	return 0;
 
 
