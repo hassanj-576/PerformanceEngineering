@@ -7,13 +7,14 @@
 
 int main(int argc, char **argv)
 {
-	if (argc !=3) {
+	if (argc !=4) {
 		printf("Please provide all arguments\n");
 		return 1;
 	}
 	printf("Hello World :D\n");
 	int nodeNumber = atoi(argv[1]);
 	int inputFile = argv[2];
+	int N = atoi(argv[3]);
 	struct Nodes * nodes = malloc(sizeof(struct Nodes)*nodeNumber);
 	char *str;
 	FILE *fp;
@@ -50,10 +51,13 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	fclose(fp);
+	#pragma omp parallel for
 	for (int first=0;first<nodeNumber;first++){
+		int x = nodes[first].x;
+		int y = nodes[first].y;
 		for(int second=0;second<nodeNumber;second++){
-			double sq1 = pow((nodes[first].x-nodes[second].x),2);
-			double sq2 = pow((nodes[first].y-nodes[second].y),2);
+			double sq1 = (x-nodes[second].x)*(x-nodes[second].x);
+			double sq2 = (y-nodes[second].y)*(y-nodes[second].y);
 			nodes[first].neighbourDistance[second]=sqrt(sq1 + sq2);
 			nodes[first].neighbourID[second]=second;
 		}
@@ -68,9 +72,12 @@ int main(int argc, char **argv)
 			{
 				if (nodes[currentNode].neighbourDistance[d] > nodes[currentNode].neighbourDistance[d+1]) /* For decreasing order use < */
 		 		 {
+					//swapping distance
 					swap = nodes[currentNode].neighbourDistance[d];
 					nodes[currentNode].neighbourDistance[d]   = nodes[currentNode].neighbourDistance[d+1];
 					nodes[currentNode].neighbourDistance[d+1] = swap;
+					
+					//swapping id
 					idswap = nodes[currentNode].neighbourID[d];
 					nodes[currentNode].neighbourID[d]   = nodes[currentNode].neighbourID[d+1];
 					nodes[currentNode].neighbourID[d+1] = idswap;
@@ -85,7 +92,7 @@ int main(int argc, char **argv)
 	FILE *f = fopen("output.txt", "w");
 
 	for (int y=0;y<nodeNumber;y++){
-		for (int x=0;x<nodeNumber;x++){
+		for (int x=0;x<N;x++){
 			fprintf(f,"Current Node : %d\t Id: %d \t Distance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
 		}
 	}
