@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     }
   }
 
-  for (i=0;i<255;i++)
+  for (i=0;i<256;i++)
     histo[i]=0;
 
   gettimeofday(&before, NULL);
@@ -72,7 +72,9 @@ int main(int argc, char **argv)
 
   printf("Total run time : %f\n", time);
 
- 
+ for (i=0;i<256;i++){
+  printf("Value of Index %d : %d\n",i,histo[i] );
+ }
 
   return 0;
 
