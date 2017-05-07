@@ -58,11 +58,16 @@ int main(int argc, char **argv)
 	int first=0;
 	int second=0;
 	for (first=0;first<nodeNumber;first++){
-		//int x = nodes[first].x;
-		//int y = nodes[first].y;
+		//CODE MOTION
+		int x = nodes[first].x;
+		int y = nodes[first].y;
 		for(second=0;second<nodeNumber;second++){
-			double sq1 = (nodes[first].x-nodes[second].x)*(nodes[first].x-nodes[second].x);
-			double sq2 = (nodes[first].y-nodes[second].y)*(nodes[first].y-nodes[second].y);
+			// ORIGINAL
+			// double sq1 = (nodes[first].x-nodes[second].x)*(nodes[first].x-nodes[second].x);
+			// double sq2 = (nodes[first].y-nodes[second].y)*(nodes[first].y-nodes[second].y);
+			//CODE MOTION
+			double sq1 = (x-nodes[second].x)*(x-nodes[second].x);
+			double sq2 = (y-nodes[second].y)*(y-nodes[second].y);
 			nodes[first].neighbourDistance[second]=sq1 + sq2;
 			nodes[first].neighbourID[second]=second;
 		}
