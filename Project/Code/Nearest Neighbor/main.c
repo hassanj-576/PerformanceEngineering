@@ -55,10 +55,12 @@ int main(int argc, char **argv)
 	fclose(fp);
 	clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 	//#pragma omp parallel for
-	for (int first=0;first<nodeNumber;first++){
+	int first=0;
+	int second=0;
+	for (first=0;first<nodeNumber;first++){
 		//int x = nodes[first].x;
 		//int y = nodes[first].y;
-		for(int second=0;second<nodeNumber;second++){
+		for(second=0;second<nodeNumber;second++){
 			double sq1 = (nodes[first].x-nodes[second].x)*(nodes[first].x-nodes[second].x);
 			double sq2 = (nodes[first].y-nodes[second].y)*(nodes[first].y-nodes[second].y);
 			nodes[first].neighbourDistance[second]=sqrt(sq1 + sq2);
@@ -68,10 +70,13 @@ int main(int argc, char **argv)
 	}
 	double swap=0;
 	int idswap=0;
-	for (int currentNode=0;currentNode<nodeNumber;currentNode++){
-		for (int c = 0 ; c < ( nodeNumber - 1 ); c++)
+	int currentNode=0;
+	int c=0;
+	int d=0;
+	for (currentNode=0;currentNode<nodeNumber;currentNode++){
+		for (c = 0 ; c < ( nodeNumber - 1 ); c++)
 		{
-			for (int d = 0 ; d < nodeNumber - c - 1; d++)
+			for (d = 0 ; d < nodeNumber - c - 1; d++)
 			{
 				if (nodes[currentNode].neighbourDistance[d] > nodes[currentNode].neighbourDistance[d+1]) /* For decreasing order use < */
 		 		 {
@@ -96,8 +101,10 @@ int main(int argc, char **argv)
 			//printf("Current Node : 1\t Id: %f \t Distance : %f\n",nodes[1].neighbourID[0],nodes[1].neighbourDistance[0]);
 	FILE *f = fopen("output.txt", "w");
 
-	for (int y=0;y<nodeNumber;y++){
-		for (int x=0;x<N;x++){
+	int x=0;
+	int y=0;
+	for (y=0;y<nodeNumber;y++){
+		for (x=0;x<N;x++){
 			fprintf(f,"Current Node : %d\t Id: %d \t Distance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
 		}
 	}
