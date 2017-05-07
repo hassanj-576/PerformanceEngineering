@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 		for(second=0;second<nodeNumber;second++){
 			double sq1 = (nodes[first].x-nodes[second].x)*(nodes[first].x-nodes[second].x);
 			double sq2 = (nodes[first].y-nodes[second].y)*(nodes[first].y-nodes[second].y);
-			nodes[first].neighbourDistance[second]=sqrt(sq1 + sq2);
+			nodes[first].neighbourDistance[second]=sq1 + sq2;
 			nodes[first].neighbourID[second]=second;
 		}
 
