@@ -3,17 +3,19 @@
 #include <time.h>  
 #include "struct.h" 
 #include <math.h>
+#include <time.h>
 
 
 int main(int argc, char **argv)
 {
+	 struct timespec start, end;
 	if (argc !=4) {
 		printf("Please provide all arguments\n");
 		return 1;
 	}
-	printf("Hello World :D\n");
+	//printf("Hello World :D\n");
 	int nodeNumber = atoi(argv[1]);
-	int inputFile = argv[2];
+	char* inputFile = argv[2];
 	int N = atoi(argv[3]);
 	struct Nodes * nodes = malloc(sizeof(struct Nodes)*nodeNumber);
 	char *str;
@@ -51,13 +53,14 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	fclose(fp);
-	#pragma omp parallel for
+	clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+	//#pragma omp parallel for
 	for (int first=0;first<nodeNumber;first++){
-		int x = nodes[first].x;
-		int y = nodes[first].y;
+		//int x = nodes[first].x;
+		//int y = nodes[first].y;
 		for(int second=0;second<nodeNumber;second++){
-			double sq1 = (x-nodes[second].x)*(x-nodes[second].x);
-			double sq2 = (y-nodes[second].y)*(y-nodes[second].y);
+			double sq1 = (nodes[first].x-nodes[second].x)*(nodes[first].x-nodes[second].x);
+			double sq2 = (nodes[first].y-nodes[second].y)*(nodes[first].y-nodes[second].y);
 			nodes[first].neighbourDistance[second]=sqrt(sq1 + sq2);
 			nodes[first].neighbourID[second]=second;
 		}
@@ -85,7 +88,9 @@ int main(int argc, char **argv)
 			}
 	 	 }
 	}
-
+	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+ 	float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+    printf("%f\n",delta_us); 
 
 			
 			//printf("Current Node : 1\t Id: %f \t Distance : %f\n",nodes[1].neighbourID[0],nodes[1].neighbourDistance[0]);
