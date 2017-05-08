@@ -4,6 +4,8 @@
 #include "struct.h" 
 #include <math.h>
 #include <time.h>
+#include "quickSelection.c"
+#include "omp.h"
 
 
 int main(int argc, char **argv)
@@ -18,6 +20,7 @@ int main(int argc, char **argv)
 	char* inputFile = argv[2];
 	int N = atoi(argv[3]);
 	struct Nodes * nodes = malloc(sizeof(struct Nodes)*nodeNumber);
+	struct Nodes * outputNode=malloc(sizeof(struct Nodes)*nodeNumber);
 	char *str;
 	FILE *fp;
 	char * line = malloc(sizeof(char)*1000);
@@ -45,6 +48,8 @@ int main(int argc, char **argv)
 			digit=strtok(NULL," ");
 			nodes[i].neighbourDistance= malloc(sizeof(double)*nodeNumber);
 			nodes[i].neighbourID= malloc(sizeof(double)*nodeNumber);
+			outputNode[i].neighbourDistance= malloc(sizeof(double)*N);
+			outputNode[i].neighbourID= malloc(sizeof(double)*N);
 		}
 		i++;
 	}
@@ -57,6 +62,7 @@ int main(int argc, char **argv)
 	//#pragma omp parallel for
 	int first=0;
 	int second=0;
+	#pragma omp parallel for private (first,second) //shared(nodes) 
 	for (first=0;first<nodeNumber;first++){
 		//CODE MOTION
 		int x = nodes[first].x;
@@ -73,46 +79,63 @@ int main(int argc, char **argv)
 		}
 
 	}
-	double swap=0;
-	int idswap=0;
+
+
 	int currentNode=0;
-	int c=0;
-	int d=0;
-	for (currentNode=0;currentNode<nodeNumber;currentNode++){
-		for (c = 0 ; c < ( nodeNumber - 1 ); c++)
-		{
-			for (d = 0 ; d < nodeNumber - c - 1; d++)
-			{
-				if (nodes[currentNode].neighbourDistance[d] > nodes[currentNode].neighbourDistance[d+1]) /* For decreasing order use < */
-		 		 {
-					//swapping distance
-					swap = nodes[currentNode].neighbourDistance[d];
-					nodes[currentNode].neighbourDistance[d]   = nodes[currentNode].neighbourDistance[d+1];
-					nodes[currentNode].neighbourDistance[d+1] = swap;
-					
-					//swapping id
-					idswap = nodes[currentNode].neighbourID[d];
-					nodes[currentNode].neighbourID[d]   = nodes[currentNode].neighbourID[d+1];
-					nodes[currentNode].neighbourID[d+1] = idswap;
-		  		}
-			}
-	 	 }
+	#pragma omp parallel for private (currentNode)
+	for(currentNode=0;currentNode<(nodeNumber);currentNode++){
+		outputNode[currentNode].neighbourDistance=sort(nodes[currentNode].neighbourDistance,nodes[currentNode].neighbourID,nodeNumber,N);
 	}
+	// double swap=0;
+	// int idswap=0;
+	// int currentNode=0;
+	// int c=0;
+	// int d=0;
+	// for (currentNode=0;currentNode<nodeNumber;currentNode++){
+	// 	for (c = 0 ; c < ( nodeNumber - 1 ); c++)
+	// 	{
+	// 		for (d = 0 ; d < nodeNumber - c - 1; d++)
+	// 		{
+	// 			if (nodes[currentNode].neighbourDistance[d] > nodes[currentNode].neighbourDistance[d+1]) /* For decreasing order use < */
+	// 	 		 {
+	// 				//swapping distance
+	// 				swap = nodes[currentNode].neighbourDistance[d];
+	// 				nodes[currentNode].neighbourDistance[d]   = nodes[currentNode].neighbourDistance[d+1];
+	// 				nodes[currentNode].neighbourDistance[d+1] = swap;
+					
+	// 				//swapping id
+	// 				idswap = nodes[currentNode].neighbourID[d];
+	// 				nodes[currentNode].neighbourID[d]   = nodes[currentNode].neighbourID[d+1];
+	// 				nodes[currentNode].neighbourID[d+1] = idswap;
+	// 	  		}
+	// 		}
+	//  	 }
+	// }
 	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
  	float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
     printf("%f\n",delta_us); 
 
 			
 			//printf("Current Node : 1\t Id: %f \t Distance : %f\n",nodes[1].neighbourID[0],nodes[1].neighbourDistance[0]);
-	FILE *f = fopen("output.txt", "w");
+
+	//FILE *f = fopen("output.txt", "w");
+	FILE *f = fopen("output5.txt", "w");
 
 	int x=0;
 	int y=0;
 	for (y=0;y<nodeNumber;y++){
 		for (x=0;x<N;x++){
-			fprintf(f,"Current Node : %d\t Id: %d \t Distance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
+			fprintf(f,"Current Node : %d\t ID : %d\tDistance : %f\n",y,nodes[y].neighbourID[x],outputNode[y].neighbourDistance[x]);
 		}
 	}
+
+	// int x=0;
+	// int y=0;
+	// for (y=0;y<nodeNumber;y++){
+	// 	for (x=0;x<N;x++){
+	// 		fprintf(f,"Current Node : %d\t ID: %d\tDistance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
+	// 	}
+	// }
 	fclose(f);
 	return 0;
 

@@ -53,6 +53,7 @@ int main(int argc, char **argv)
     fp = fopen(argv[4], "r");
     if (fp == NULL)
         printf("Error\n");
+    printf("reading file\n");
     while ((read = getline(&line, &len, fp)) != -1) {
         digit= strtok(line," ");
         while(digit!=NULL){
@@ -75,7 +76,7 @@ int main(int argc, char **argv)
 
 	/* print some text */
    int * matrix2Transpose = malloc(sizeof(int)*N2*M2);
-   clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+   printf("transposing\n");
    int i2=0;
    for (int i = 0; i < M2; ++i)
     {
@@ -90,6 +91,11 @@ int main(int argc, char **argv)
     int * ans= malloc(sizeof(int)*N1*M2);
     int iM1=0;
     int iM2=0;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+
+   // 3N1 + 3xN1M2 5xN1M2M1
+    //N1M2 + N1M2M1 
+    printf("Starting calcuation\n");
     for(i=0;i<N1;i++){
     	int j2=0;
     	for (j=0;j<M2;j++){
@@ -99,17 +105,28 @@ int main(int argc, char **argv)
 
     		}
     		
-    		fprintf(f,"%d\t",ans[iM2+j]);
+    		//fprintf(f,"%d\t",ans[iM2+j]);
     		j2=j2+M2;
     	}
-    	fprintf(f,"\n");
+    	//fprintf(f,"\n");
     	iM1+=M1;
     	iM2+=M2;
     }
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-    fclose(f);
-    float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+    float delta_us = (end.tv_sec - start.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec);
     printf("%f\n",delta_us);  
+    for(i=0;i<N1;i++){
+        for (j=0;j<M2;j++){
+            //printf("Inner loop\n");
+            fprintf(f,"%d\t",ans[i*M2+j]);
+        }
+        fprintf(f,"\n");
+        //printf("PRInted a line \n");
+     }
+
+
+    fclose(f);
+    
 
 	return 0;
 }
