@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
   for (i = 0; i < width; i++) {
     for (j = 0; j < length; j++) {
-      image[i*length + j] = 255;
+      image[i*length + j] = rand()%255;
     }
   }
 
