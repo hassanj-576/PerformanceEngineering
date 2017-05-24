@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include "omp.h"
 
 #define data_t	float 
 static int STARTOFFSET=2;
@@ -12,19 +13,19 @@ data_t filter5x5[] = {1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 2.0f, 1.0f
 data_t filter3x3[] = {-1.0f, 0.0f, 1.0f, -2.0f, 0.0f, 2.0f, -1.0f, 0.0f, 1.0f};
 
 void convolution(data_t *inData, data_t *outData, const int width, const int height,data_t *filter) {
-	for ( int y = 0; y < height; y++ ) {
-	// for ( int y = STARTOFFSET; y < height-ENDOFFSET; y++ ) {
-	   // for ( int x = STARTOFFSET; x < width-ENDOFFSET; x++ ) {
-	   for ( int x = 0; x < width; x++ ) {
+	// for ( int y = 0; y < height; y++ ) {
+	#pragma omp parallel for shared(filter,outData,inData)
+	for ( int y = STARTOFFSET; y < height-ENDOFFSET; y++ ) {
+	   for ( int x = STARTOFFSET; x < width-ENDOFFSET; x++ ) {
 	   		int outterIndex=(y * width) + x;
 		   	unsigned int filterItem = 0;
 		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
 		   		int innerIndex=fy*width;
-		   		if(fy<0||fy>=height){
-		   			printf("Inside if\n");
-		   			filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   			continue;
-		   		}
+		   		// if(fy<0||fy>=height){
+		   		// 	printf("Inside if\n");
+		   		// 	filterItem=filterItem+STARTOFFSET+ENDOFFSET;
+		   		// 	continue;
+		   		// }
 		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
 		   			
 			  //  		if ( ((fx < 0) || (fx >= width)) ) {
