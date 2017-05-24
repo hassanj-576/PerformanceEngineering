@@ -1,14 +1,22 @@
-all: convo tranigle sobel convoPar
+all: convo triangle sobel convoPar convoOpt triangleOpt sobelOpt
 
 convo: convo.c
 		gcc-7 -o convo -O3 convo.c  
+convoOpt: convoOpt.c
+		gcc-7 -o convoOpt -O3 convoOpt.c  
 convoPar: convoPar.c
 		gcc-7 -o convoPar -O3 convoPar.c -fopenmp  
 
-tranigle: tranigle.c
-		gcc -o tranigle -O3 tranigle.c  -std=gnu99
+triangle: triangle.c
+		gcc-7 -o triangle -O3 triangle.c  -std=gnu99
+
+triangleOpt: triangleOpt.c
+		gcc-7 -o triangleOpt -O3 triangleOpt.c  -std=gnu99
+
 sobel: sobel.c
-		gcc -o sobel -O3 sobel.c  -std=gnu99
+		gcc-7 -o sobel -O3 sobel.c  -std=gnu99
+sobelOpt: sobelOpt.c
+		gcc-7 -o sobelOpt -O3 sobelOpt.c  -std=gnu99
 
 clean:
-		rm  convo tranigle
+		rm  convo triangle convoOpt convoPar triangleOpt sobelOpt sobel

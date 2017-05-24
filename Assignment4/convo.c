@@ -14,24 +14,23 @@ data_t filter3x3[] = {-1.0f, 0.0f, 1.0f, -2.0f, 0.0f, 2.0f, -1.0f, 0.0f, 1.0f};
 void convolution(data_t *inData, data_t *outData, const int width, const int height,data_t *filter) {
 	for ( int y = 0; y < height; y++ ) {
 	   for ( int x = 0; x < width; x++ ) {
-	   		// int outterIndex=(y * width) + x;
+	   		int outterIndex=(y * width) + x;
 		   	unsigned int filterItem = 0;
 		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		// int innerIndex=fy*width;
-		   		// if(fy<0||fy>=height){
-		   		// 	printf("Inside if\n");
-		   		// 	filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   		// 	continue;
-		   		// }
+		   		int innerIndex=fy*width;
+		   		if(fy<0||fy>=height){
+		   			filterItem=filterItem+STARTOFFSET+ENDOFFSET;
+		   			continue;
+		   		}
 		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-			  //  	if ( ((fx < 0) || (fx >= width)) ) {
-			   		if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
+			   	if ( ((fx < 0) || (fx >= width)) ) {
+			   		// if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
 						filterItem++;
 						continue;
 					}
-			   		outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
+			   		// outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
 			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
+			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
 			   		filterItem++;
 	   			}
 			}
@@ -99,12 +98,12 @@ int main(int argc, char **argv){
 	(double)(after.tv_usec - before.tv_usec) / 1e6;
 	
 
-	for (i = 0; i < width; i++) {
-		for (j = 0; j < height; j++) {
-			printf("%f\t",outputData[i*height + j] );
-		}
-		printf("\n");
-	}
+	// for (i = 0; i < width; i++) {
+	// 	for (j = 0; j < height; j++) {
+	// 		printf("%f\t",outputData[i*height + j] );
+	// 	}
+	// 	printf("\n");
+	// }
 	printf("Total run time : %f\n", timeVal);
 	   
 	// generate data 
