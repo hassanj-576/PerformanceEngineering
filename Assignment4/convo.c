@@ -13,153 +13,31 @@ data_t filter3x3[] = {-1.0f, 0.0f, 1.0f, -2.0f, 0.0f, 2.0f, -1.0f, 0.0f, 1.0f};
 
 void convolution(data_t *inData, data_t *outData, const int width, const int height,data_t *filter) {
 	for ( int y = 0; y < height; y++ ) {
-	// for ( int y = STARTOFFSET; y < height-ENDOFFSET; y++ ) {
-	   // for ( int x = STARTOFFSET; x < width-ENDOFFSET; x++ ) {
 	   for ( int x = 0; x < width; x++ ) {
-	   		int outterIndex=(y * width) + x;
+	   		// int outterIndex=(y * width) + x;
 		   	unsigned int filterItem = 0;
 		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		int innerIndex=fy*width;
-		   		if(fy<0||fy>=height){
-		   			printf("Inside if\n");
-		   			filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   			continue;
-		   		}
-		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-		   			
-			  //  		if ( ((fx < 0) || (fx >= width)) ) {
-			   		
-			  // //  		if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
-					// 	filterItem++;
-					// 	//printf("Filter Item inside: %d\n",filterItem);
-					// 	continue;
-					// }
-			   		//outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//printf("Filter Item: %d\t Filter: %f\n",filterItem,filter[filterItem]);
-			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
-			   		filterItem++;
-	   			}
-			}
-		}
-		 for ( int x = 0; x < STARTOFFSET; x++ ) {
-	   		int outterIndex=(y * width) + x;
-		   	unsigned int filterItem = 0;
-		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		int innerIndex=fy*width;
+		   		// int innerIndex=fy*width;
 		   		// if(fy<0||fy>=height){
 		   		// 	printf("Inside if\n");
 		   		// 	filterItem=filterItem+STARTOFFSET+ENDOFFSET;
 		   		// 	continue;
 		   		// }
 		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-		   			
-			   		if ( ((fx < 0) || (fx >= width)) ) {
-			   		
-			  //  		if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
+			  //  	if ( ((fx < 0) || (fx >= width)) ) {
+			   		if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
 						filterItem++;
-						//printf("Filter Item inside: %d\n",filterItem);
 						continue;
 					}
-			   		//outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
+			   		outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
 			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//printf("Filter Item: %d\t Filter: %f\n",filterItem,filter[filterItem]);
-			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
-			   		filterItem++;
-	   			}
-			}
-		}
-		 for ( int x = width-ENDOFFSET; x < width; x++ ) {
-	   		int outterIndex=(y * width) + x;
-		   	unsigned int filterItem = 0;
-		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		int innerIndex=fy*width;
-		   		// if(fy<0||fy>=height){
-		   		// 	printf("Inside if\n");
-		   		// 	filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   		// 	continue;
-		   		// }
-		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-		   			
-			   		if ( ((fx < 0) || (fx >= width)) ) {
-			   		
-			  //  		if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
-						filterItem++;
-						//printf("Filter Item inside: %d\n",filterItem);
-						continue;
-					}
-			   		//outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//printf("Filter Item: %d\t Filter: %f\n",filterItem,filter[filterItem]);
-			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
-			   		filterItem++;
-	   			}
-			}
-		}
-	}
-	for ( int y = 0; y < STARTOFFSET; y++ ) {
-	   for ( int x = 0; x < width; x++ ) {
-	   		int outterIndex=(y * width) + x;
-		   	unsigned int filterItem = 0;
-		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		int innerIndex=fy*width;
-		   		if(fy<0){
-		   			//printf("Inside if in y value of y and fy: : %d\t%d\n",y,fy);
-		   		// 	printf("Inside if\n");
-		   			filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   			continue;
-		   		}
-		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-		   			
-			   		if ( ((fx < 0) || (fx >= width)) ) {
-			   			//printf("Inside if in x value of y and fy: : %d\t%d\n",y,fy);
-			   		
-			  //  		// if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
-						filterItem++;
-					// 	//printf("Filter Item inside: %d\n",filterItem);
-						continue;
-					}
-			   		//outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//printf("Filter Item: %d\t Filter: %f\n",filterItem,filter[filterItem]);
-			   		//printf("Outside value of y and fy: : %d\t%d\n",y,fy);
-			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
+			   		//outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
 			   		filterItem++;
 	   			}
 			}
 		}
 	}
 	
-
-for ( int y = height-ENDOFFSET-1; y < height; y++ ) {
-	   for ( int x = 0; x < width; x++ ) {
-	   		int outterIndex=(y * width) + x;
-		   	unsigned int filterItem = 0;
-		   	for ( int fy = y - STARTOFFSET; fy < y + ENDOFFSET; fy++ ) {
-		   		int innerIndex=fy*width;
-		   		if(fy>=height){
-		   		// 	printf("Inside if\n");
-		   			filterItem=filterItem+STARTOFFSET+ENDOFFSET;
-		   			continue;
-		   		}
-		   		for ( int fx = x - STARTOFFSET; fx < x + ENDOFFSET; fx++ ) {
-		   			
-			   		if ( ((fx < 0) || (fx >= width)) ) {
-			   		
-			  //  		// if ( ((fy < 0) || (fy >= height)) || ((fx < 0) || (fx >= width)) ) {
-						filterItem++;
-					// 	//printf("Filter Item inside: %d\n",filterItem);
-						continue;
-					}
-			   		//outData[(y * width) + x] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//outData[outterIndex] += inData[(fy * width) + fx] * filter[filterItem];
-			   		//printf("Filter Item: %d\t Filter: %f\n",filterItem,filter[filterItem]);
-			   		outData[outterIndex] += inData[(innerIndex) + fx] * filter[filterItem];
-			   		filterItem++;
-	   			}
-			}
-		}
-	}
 	
 }
 int main(int argc, char **argv){
