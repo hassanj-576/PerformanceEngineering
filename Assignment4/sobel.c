@@ -11,7 +11,7 @@
 const data_t filterX[] = {-1.0f, 0.0f, 1.0f, -2.0f, 0.0f, 2.0f, -1.0f, 0.0f, 1.0f};
 const data_t filterY[] = {-1.0f, -2.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 2.0f, 1.0f};
 
-void sobel(data_t *inData, data_t *outData, const int width, const int height) {
+void sobel1(data_t *inData, data_t *outData, const int width, const int height) {
 
 	for ( int y = 1; y < height-1; y++ ) {
 		for ( int x = 1; x < width-1; x++ ) {
@@ -35,7 +35,7 @@ void sobel(data_t *inData, data_t *outData, const int width, const int height) {
 	}
 	
 }
-void sobel1(data_t *inData, data_t *outData, const int width, const int height) {
+void sobel2(data_t *inData, data_t *outData, const int width, const int height) {
 
 	for ( int y = 1; y < height-1; y++ ) {
 		for ( int x = 1; x < width-1; x++ ) {
@@ -87,7 +87,7 @@ int main(int argc, char **argv){
 		}
 	}
 	gettimeofday(&before, NULL);
-	sobel(inputData,outputData,width,height);
+	sobel2(inputData,outputData,width,height);
 
 
 	gettimeofday(&after, NULL);

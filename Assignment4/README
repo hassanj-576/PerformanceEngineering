@@ -1,0 +1,53 @@
+We have provided a Makefile along with the code, it works on DAS4
+Now we will mention each file, what it has and how to run it
+
+convo.c
+Contains the code for convulation, the first 2 optimization have been applied
+to run it
+
+convoOpt.c
+Contains the code for the fully optamize version of convulation
+
+convoPar.c
+Contains the code for parallel version of the fully optamize version of convulation
+
+
+All three of them can be run in the same way, for example for convo
+./convo width height kernel
+
+Here width and height are both integer parameters and kernel is if you want to run 3 (for 3x3 kernel) and 5 (for 5x5 kernel)
+So for example
+./convo 1000 1000 5
+
+
+Simillarly we can run convoOpt and convoPar
+
+triangle.c
+Contains the code for triangle smoothening. The first two optimization has been applied 
+triangleOpt.c
+Contains the code for the fully optimized version of triangle smoothening
+
+Both can be run in the same way
+
+./triangle width height
+
+for example
+./triangle 1000 1000
+
+
+sobel.c
+Contains the simple version, and first optamized version of sobel operator. 
+There are two function inside sobel1 and sobel2. sobel1 is the simple version and sobel2 is the one with first optimization
+
+sobelOpt.c
+Contains the optamized version of sobel operator
+
+There are two function inside sobelOpt1 and sobelOpt2. sobelOpt1 is the version with loop unrolling and sobelOpt2 is the one with loop unrolling and splitting the computation
+
+To run either of the above two
+use 
+./sobel width height
+for example
+./sobel 1000 1000
+
+By default, sobel calls the function sobel2 and sobelOpt calls sobelOpt2. to call the other function, the code has to be changed
