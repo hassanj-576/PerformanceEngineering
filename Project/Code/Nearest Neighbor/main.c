@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/time.h>
 #include <string.h>
 #include <time.h>  
 #include "struct.h" 
@@ -10,7 +11,7 @@
 
 int main(int argc, char **argv)
 {
-	 struct timespec start, end;
+	 //struct timespec start, end;
 	if (argc !=4) {
 		printf("Please provide all arguments\n");
 		return 1;
@@ -25,7 +26,7 @@ int main(int argc, char **argv)
 	FILE *fp;
 	char * line = malloc(sizeof(char)*1000);
 	size_t len = 0;
-	ssize_t read;
+	size_t read;
 	int i=0;
 	int j=0;
 
@@ -58,10 +59,13 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	fclose(fp);
-	clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+	//clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 	//#pragma omp parallel for
 	int first=0;
 	int second=0;
+	struct timeval before;
+	struct timeval after;
+	gettimeofday(&before, NULL);
 	#pragma omp parallel for private (first,second) //shared(nodes) 
 	for (first=0;first<nodeNumber;first++){
 		//CODE MOTION
@@ -86,6 +90,9 @@ int main(int argc, char **argv)
 	for(currentNode=0;currentNode<(nodeNumber);currentNode++){
 		outputNode[currentNode].neighbourDistance=sort(nodes[currentNode].neighbourDistance,nodes[currentNode].neighbourID,nodeNumber,N);
 	}
+	gettimeofday(&after, NULL);
+	double timeVal = (double)(after.tv_sec - before.tv_sec) +
+	(double)(after.tv_usec - before.tv_usec) / 1e6;
 	// double swap=0;
 	// int idswap=0;
 	// int currentNode=0;
@@ -111,9 +118,9 @@ int main(int argc, char **argv)
 	// 		}
 	//  	 }
 	// }
-	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
- 	float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-    printf("%f\n",delta_us); 
+	//clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+ 	// float delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+  //   printf("%f\n",delta_us); 
 
 			
 			//printf("Current Node : 1\t Id: %f \t Distance : %f\n",nodes[1].neighbourID[0],nodes[1].neighbourDistance[0]);
@@ -137,6 +144,7 @@ int main(int argc, char **argv)
 	// 	}
 	// }
 	fclose(f);
+	printf("Total run time : %f\n", timeVal);
 	return 0;
 
 
