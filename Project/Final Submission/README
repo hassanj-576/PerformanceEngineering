@@ -1,0 +1,29 @@
+The folder contains three  subfolder
+
+model:
+The model folder contains the logistic regression model. The model and the training data is provided. All you have to do is to run logistic.py to run the model. The model uses the following libraries
+numpy
+pylab
+sklearn
+pandas
+
+
+NearestNeighbor:
+This folder contains the code for nearest neighbor. We have procvided a make file that compiles all the versions of our code. The makefile has been tested on DAS 4.
+The binaries takes 3 input command line parameters
+N - total Number of nodes
+Filename - input file name
+k - number of nearest neighbors. 
+Make sure the file has N number of nodes or the code will return and error and exit gracefully.
+For example, to run the naive using a input file 100.txt that has 100 nodes use the following command
+./naive 100 100.txt 10
+
+We have also provided a python file to generate data files. It takes two arguments
+output file name
+number of nodes
+
+So to generate a file with 100 points named 100.txt, run the following command
+python datagenerator.py 100.txt 100
+
+CUDA: 
+This folder contains the CUDA code. This can also be made using the provided makaefile. We have also included the corresponding libraries used. This also takes the same command line arguments as other implementations of Nearest Neighbor
