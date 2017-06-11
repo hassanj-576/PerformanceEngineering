@@ -5,8 +5,8 @@ from sklearn import datasets, linear_model
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('resultsMerged.csv')
+df = pd.read_csv('seq.csv')
 print df
-main = df[df["Function"] == "EC2"]
+main = df[df["Function"] == "Main"]
 print main
-main.to_csv('ec2.csv', index=False)
+main.to_csv('mainSeq.csv', index=False)

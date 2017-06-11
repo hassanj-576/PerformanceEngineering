@@ -32,8 +32,6 @@ allError =[]
 for val in testX:
 	val=val.reshape(1,-1)
 	predictedVal=regr.predict(val)
-	print "Actual value: "+str(testY[index])
-	print "Predicted Value: "+ str(predictedVal)
 	error=(predictedVal-testY[index])**2
 	allError.append(error)
 	index=index+1
@@ -42,13 +40,20 @@ for val in testX:
 print np.mean(allError)
 
 
+#print ec2Df
+ec2Df.is_copy = False
+ec2Df["Nsq"] = ec2Df["N"]*ec2Df["N"]
+ec2Df["totalSq"]=ec2Df["TotalNumber"]*ec2Df["TotalNumber"]
+ec2Df = ec2Df[['Function', 'TotalNumber', 'totalSq', 'N', 'Nsq','ExecutionTime']]
 
+
+#print ec2Df
 data = ec2Df.values
 
 np.random.shuffle(data)
 
-X = data[:, 0:3]
-y = data[:, 3]
+X = data[:, 0:5]
+y = data[:, 5]
 
 limit = len(X)*0.8
 trainingX, testX = X[:limit,:], X[limit:,:]
@@ -65,6 +70,7 @@ for val in testX:
 	#print error
 	allError.append(error)
 	index=index+1
+print np.mean(allError)
 
 
 

@@ -5,10 +5,11 @@
 #include <stdlib.h>
 #include <float.h>
 #include "quickSelection.c"
-#include "struct2.h" 
+#include "struct.h" 
 
 
 int main(int argc, char **argv){
+	
 	if (argc !=4) {
 		printf("Please provide all arguments\n");
 		return 1;
@@ -18,6 +19,8 @@ int main(int argc, char **argv){
 	char* inputFile = argv[2];
 	int N = atoi(argv[3]);
 	struct Nodes * nodes = malloc(sizeof(struct Nodes)*nodeNumber); 
+	
+	struct Distance *nodeDistance = malloc(sizeof(struct Distance)*nodeNumber);
 	
 
 	char *str;
@@ -49,8 +52,9 @@ int main(int argc, char **argv){
 			nodes[i].y=atoi(digit);
 			digit=strtok(NULL," ");
 			
-			nodes[i].neighbourDistance= malloc(sizeof(double)*N);
-			nodes[i].neighbourID= malloc(sizeof(double)*N);
+			nodeDistance[i].neighbourDistance= malloc(sizeof(double)*N);
+			nodeDistance[i].neighbourID= malloc(sizeof(double)*N);
+			
 		}
 		i++;
 	}
@@ -63,19 +67,18 @@ int main(int argc, char **argv){
 	int first=0;
 	int second=0;
 	
-	printf("%s:%d\n",__FUNCTION__,__LINE__ );
 	gettimeofday(&before, NULL);
 
-	#pragma omp parallel for private (first, second) shared (nodes)
+	#pragma omp parallel for private (first,second) shared(nodeDistance,nodes)
 	for (first=0;first<nodeNumber;first++){
-		
+		//CODE MOTION
 		int x = nodes[first].x;
 		int y = nodes[first].y;
 		double max=DBL_MAX;
 		int maxIndex=0;
 		int empty=0;
-		double *n_distance = nodes[first].neighbourDistance;
-		int *id = nodes[first].neighbourID;
+		double *n_distance = nodeDistance[first].neighbourDistance;
+		int *id = nodeDistance[first].neighbourID;
 		
 
 		for(second=0;second<nodeNumber;second++){
@@ -91,13 +94,13 @@ int main(int argc, char **argv){
 				
 				if(empty==N){
 					
-					nodes[first].neighbourDistance[maxIndex]=distance;
-					nodes[first].neighbourID[maxIndex] = second;
+					n_distance[maxIndex]=distance;
+					id[maxIndex] = second;
 
 				}else{
 					
-					nodes[first].neighbourDistance[empty]=distance;
-					nodes[first].neighbourID[empty] = second;
+					n_distance[empty]=distance;
+					id[empty] = second;
 				
 					empty++;
 				}
@@ -105,26 +108,26 @@ int main(int argc, char **argv){
 				max = 0.00;
 
 				for(int i=0;i<empty;i++){
-					if (nodes[first].neighbourDistance[i] > max) {
-						
-						max = nodes[first].neighbourDistance[i];
+					if (n_distance[i] > max) {
+						//max = nodes[first].neighbourDistance[i];
+						max = n_distance[i];
 						maxIndex = i;
 					}
 				}
-
 				
 			}
+			
 		}
 
 	}
 	gettimeofday(&after, NULL);
-	FILE *f = fopen("new.txt", "w");
+	FILE *f = fopen("new2.txt", "w");
 
 	int x=0;
 	int y=0;
 	for (y=0;y<nodeNumber;y++){
 		for (x=0;x<N;x++){
-			fprintf(f,"Current Node : %d\t ID : %d\tDistance : %f\n",y,nodes[y].neighbourID[x],nodes[y].neighbourDistance[x]);
+			fprintf(f,"Current Node : %d\t ID : %d\tDistance : %f\n",y,nodeDistance[y].neighbourID[x],nodeDistance[y].neighbourDistance[x]);
 		}
 	}
 	fclose(f);
@@ -133,7 +136,7 @@ int main(int argc, char **argv){
 	double timeVal = (double)(after.tv_sec - before.tv_sec) +
 	(double)(after.tv_usec - before.tv_usec) / 1e6;
 
-	printf("Total run time : %f\n", timeVal);
+	printf("%f", timeVal);
 	
 	return 0;
 

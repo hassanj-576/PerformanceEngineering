@@ -26,7 +26,7 @@ scatter(xNumpy[pos, 0], xNumpy[pos, 1], marker='o', c='b')
 scatter(xNumpy[neg, 0], xNumpy[neg, 1], marker='x', c='r')
 xlabel('Total Number Of Data N')
 ylabel('k')
-legend(['EC2', 'Main'])
+legend(['CustomAlgo', 'SelectionAlgo'])
 show()
 
 
