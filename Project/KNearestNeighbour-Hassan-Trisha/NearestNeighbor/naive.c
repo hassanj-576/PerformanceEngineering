@@ -60,7 +60,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	fclose(fp);
-
+	//clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+	//#pragma omp parallel for
 	int first=0;
 	int second=0;
 	struct timeval ecStart,ecEnd, sortStart,sortEnd;
@@ -69,14 +70,12 @@ int main(int argc, char **argv)
 	struct timeval before;
 	struct timeval after;
 	gettimeofday(&before, NULL);
-	gettimeofday(&ecStart, NULL);
-	#pragma omp parallel for private (first,second) //shared(nodes) 
+	
+	
 	for (first=0;first<nodeNumber;first++){
-		//CODE MOTION
 		int x = nodes[first].x;
 		int y = nodes[first].y;
 		for(second=0;second<nodeNumber;second++){
-			
 			double sq1 = (x-nodes[second].x)*(x-nodes[second].x);
 			double sq2 = (y-nodes[second].y)*(y-nodes[second].y);
 			nodes[first].neighbourDistance[second]=sq1 + sq2;
@@ -84,30 +83,36 @@ int main(int argc, char **argv)
 		}
 
 	}
-	gettimeofday(&ecEnd, NULL);
-
-
+	
+	
+	double swap=0;
+	int idswap=0;
 	int currentNode=0;
-	gettimeofday(&sortStart, NULL);
-	#pragma omp parallel for private (currentNode)
-	for(currentNode=0;currentNode<(nodeNumber);currentNode++){
-		//outputNode[currentNode].neighbourDistance=sort(nodes[currentNode].neighbourDistance,nodes[currentNode].neighbourID,nodeNumber,N);
-		sort(nodes[currentNode].neighbourDistance,nodes[currentNode].neighbourID,nodeNumber,N);
-
+	int c=0;
+	int d=0;
+	for (currentNode=0;currentNode<nodeNumber;currentNode++){
+		for (c = 0 ; c < ( nodeNumber - 1 ); c++)
+		{
+			for (d = 0 ; d < nodeNumber - c - 1; d++)
+			{
+				if (nodes[currentNode].neighbourDistance[d] > nodes[currentNode].neighbourDistance[d+1]) /* For decreasing order use < */
+		 		 {
+					//swapping distance
+					swap = nodes[currentNode].neighbourDistance[d];
+					nodes[currentNode].neighbourDistance[d]   = nodes[currentNode].neighbourDistance[d+1];
+					nodes[currentNode].neighbourDistance[d+1] = swap;
+					
+					//swapping id
+					idswap = nodes[currentNode].neighbourID[d];
+					nodes[currentNode].neighbourID[d]   = nodes[currentNode].neighbourID[d+1];
+					nodes[currentNode].neighbourID[d+1] = idswap;
+		  		}
+			}
+	 	 }
 	}
-	gettimeofday(&sortEnd, NULL);
 	gettimeofday(&after, NULL);
-	double timeVal = (double)(after.tv_sec - before.tv_sec) +
-	(double)(after.tv_usec - before.tv_usec) / 1e6;
-	
-	double timeVal2 = (double)(ecEnd.tv_sec - ecStart.tv_sec) +
-	(double)(ecEnd.tv_usec - ecStart.tv_usec) / 1e6;
-	
-	double timeVal3 = (double)(sortEnd.tv_sec - sortStart.tv_sec) +
-	(double)(sortEnd.tv_usec - sortStart.tv_usec) / 1e6;
-	
 
-	FILE *f = fopen("output.txt", "w");
+	FILE *f = fopen("naive.txt", "w");
 
 	int x=0;
 	int y=0;
@@ -117,7 +122,6 @@ int main(int argc, char **argv)
 		}
 	}
 
-	
 	fclose(f);
 	for(int i=0;i<nodeNumber;i++){
 		free(nodes[i].neighbourDistance);
@@ -125,9 +129,11 @@ int main(int argc, char **argv)
 	}
 	free (nodes);
 	
+	double timeVal = (double)(after.tv_sec - before.tv_sec) +
+	(double)(after.tv_usec - before.tv_usec) / 1e6;
+
+
 	printf("%f", timeVal);
-	// printf("EC run time : %f\n", timeVal2);
-	// printf("Sort run time : %f\n", timeVal3);
 	return 0;
 
 

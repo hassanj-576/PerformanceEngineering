@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 	
 	
 
-	FILE *f = fopen("output.txt", "w");
+	FILE *f = fopen("selectionAlgo.txt", "w");
 
 
 	int x=0;

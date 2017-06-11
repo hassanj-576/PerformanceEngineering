@@ -3,10 +3,18 @@ from pylab import scatter, show, legend, xlabel, ylabel
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
 import numpy as np
+import sys
 
+
+if(len(sys.argv)<3):
+	print "Please give value of N and k"
+	exit()
+
+inputN =int(sys.argv[1])
+inputK = int(sys.argv[2])
+userInput = np.array([inputN,inputK])
 
 df = pd.read_csv('model.csv')
-print("Total Data: "+str(len(df)))
 ec2DF= df.loc[df['Function'] == "EC2"]
 mainDF= df.loc[df['Function'] == "Main"]
 
@@ -15,7 +23,6 @@ mainFinal = pd.DataFrame(mainDF, columns=['TotalNumber', 'N','ExecutionTime']).r
 finalDf = pd.DataFrame(ec2DF, columns=['TotalNumber', 'N'])
 finalDf['model'] = np.where((ec2Final['ExecutionTime'] <= mainFinal['ExecutionTime']), 1, 0)
 
-print "Data in Model: "+ str(len(finalDf))
 X = pd.DataFrame(finalDf, columns=['TotalNumber', 'N'])
 y = pd.DataFrame(finalDf, columns=['model'])
 xNumpy = X.values
@@ -70,4 +77,10 @@ print "Wrong Prediction: "+ str(wrong)
 errorPercent = (wrong/float(correct))*100
 print "Percentage Error of Mode %f" %errorPercent
 print "Correct Percentage " +str(100-errorPercent)
+
+userInput=userInput.reshape(1,-1)
+if(logistic.predict(userInput)==0):
+	print "For given value of N and k, the model predicted Selection Algorithm" 
+elif (logistic.predict(userInput)==1):
+	print "For given value of N and k, the model predicted Custom Algorithm"
 

@@ -8,6 +8,20 @@ sklearn
 pandas
 
 
+The model accepts two parameters, the value of N and k, to run it use the following example
+python logistic.py 10000 10
+The model first creates the plot, it then trains on the training set, and then runs the cross validation on the test set and outputs the percentage of values it got right. It then predcits which 
+algorithm the user should use for the given value of N and k
+
+The file also contains the linear.py 
+This is the linear regression model, it uses the same libraries and the same input command line parameters. It reads the input data, splits it into two for the two algorithms. It then trains on 
+the training set for each algorithm and 
+then tests on the cross validation set for each algorithm and prints the mean error in seconds for both the sets. It then predicts for the given value of N and k, what are the times for 
+selection and custom Algorithms.
+
+
+
+
 NearestNeighbor:
 This folder contains the code for nearest neighbor. We have procvided a make file that compiles all the versions of our code. The makefile has been tested on DAS 4.
 The binaries takes 3 input command line parameters

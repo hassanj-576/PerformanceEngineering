@@ -4,13 +4,18 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import datasets, linear_model
 import pandas as pd
 import numpy as np
+import sys
 
 
-inputN =sys.argv[1]
-inputK = sys.arg[2]
+if(len(sys.argv)<3):
+	print "Please give value of N and k"
+	exit()
 
-userInput  np.array([inputN,inputK])
-print userInput
+inputN =int(sys.argv[1])
+inputK = int(sys.argv[2])
+
+userInputSelection = np.array([0,inputN,inputK])
+userInputCustom = np.array([1,inputN,inputK])
 
 df = pd.read_csv('model.csv')
 
@@ -43,23 +48,24 @@ for val in testX:
 	index=index+1
 
 
-print " Mean Error for selection Aglortihm"+ str( np.mean(allError) ) +" seconds"
 
+print "Mean Error for Selection Algorithm Aglortihm: "+ str( np.mean(allError) ) +" seconds"
+userInputSelection=userInputSelection.reshape(1,-1)
+print "Time Predicted for Selection Algorithm for Given Input : "+ str((regr.predict(userInputSelection)) )+ " seconds"
 
 #print ec2Df
-ec2Df.is_copy = False
-ec2Df["Nsq"] = ec2Df["N"]*ec2Df["N"]
-ec2Df["totalSq"]=ec2Df["TotalNumber"]*ec2Df["TotalNumber"]
-ec2Df = ec2Df[['Function', 'TotalNumber', 'totalSq', 'N', 'Nsq','ExecutionTime']]
+# ec2Df.is_copy = False
+# ec2Df["Nsq"] = ec2Df["N"]*ec2Df["N"]
+# ec2Df["totalSq"]=ec2Df["TotalNumber"]*ec2Df["TotalNumber"]
+# ec2Df = ec2Df[['Function', 'TotalNumber', 'totalSq', 'N', 'Nsq','ExecutionTime']]
 
-
-print ec2Df
 data = ec2Df.values
+
 
 np.random.shuffle(data)
 
-X = data[:, 0:5]
-y = data[:, 5]
+X = data[:, 0:3]
+y = data[:, 3]
 
 limit = len(X)*0.8
 trainingX, testX = X[:limit,:], X[limit:,:]
@@ -76,7 +82,12 @@ for val in testX:
 	#print error
 	allError.append(error)
 	index=index+1
-print " Mean Error for custom Aglortihm"+ str( np.mean(allError) ) +" seconds"
+
+print "Mean Error for custom Aglortihm: "+ str( np.mean(allError) ) +" seconds"
+userInputCustom=userInputCustom.reshape(1,-1)
+print "Time Predicted for Selection Algorithm for Given Input : "+ str((regr.predict(userInputSelection)) )+ " seconds"
+
+
 
 
 
